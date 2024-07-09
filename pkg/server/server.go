@@ -120,6 +120,10 @@ func (s *Server) handleConn(conn net.Conn) {
 			}
 			_, err := p.conn.Write([]byte(msg))
 			if err != nil {
+				if strings.Contains(err.Error(), "broken pipe") {
+					p.conn.Close()
+					slog.Info("Terminated broken pipe connection", "addr", p.conn.RemoteAddr().String())
+				}
 				slog.Error("Couldn't to send message", "err", err)
 			}
 		}
@@ -164,7 +168,7 @@ func (p *Person) handleCmd(cmd string) (bool, error) {
 		p.createRoom(parts[1])
 	case ":rename":
 		p.name = parts[1]
-		_, err := p.conn.Write([]byte("You are now " + p.name + "\n"))
+		_, err := p.conn.Write([]byte("*** You are now " + p.name + "\n"))
 		if err != nil {
 			return shouldQuit, err
 		}
@@ -210,7 +214,7 @@ func (p *Person) joinRoom(roomName string) {
 	}
 
 	p.room = roomName
-	_, err := p.conn.Write([]byte("Welcome to " + roomName + "\n"))
+	_, err := p.conn.Write([]byte("*** Welcome to " + roomName + " ***\n"))
 	if err != nil {
 		slog.Error("Couldn't write message", "err", err)
 	}

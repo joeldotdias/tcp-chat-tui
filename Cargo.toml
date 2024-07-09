@@ -1,0 +1,13 @@
+[package]
+name = "tcp-chat-tui"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+crossterm = { version = "0.27.0", features = ["event-stream"] }
+futures = "0.3.30"
+ratatui = "0.27.0"
+regex = "1.10.5"
+tokio = { version = "1.38.0", features = ["full"] }
+tokio-util = { version = "0.7.11", features = ["codec"] }
+tui-textarea = "0.5.0"
