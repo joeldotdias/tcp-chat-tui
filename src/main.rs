@@ -48,24 +48,14 @@ async fn main() -> io::Result<()> {
             let msg_height = messages_area.height - 2;
             let msg_width = messages_area.width - 2;
 
-            let msgeez = app
-                .messages_to_list(msg_height.into(), msg_width.into())
-                .block(
-                    Block::default()
-                        .rapid_blink()
-                        .borders(Borders::ALL)
-                        .title(Span::styled(
+            let msgeez =
+                app.messages_to_list(msg_height.into(), msg_width.into())
+                    .block(Block::default().rapid_blink().borders(Borders::ALL).title(
+                        Span::styled(
                             &app.room,
                             Style::default().fg(Color::Red).add_modifier(Modifier::BOLD),
-                        ))
-                        .title_bottom(
-                            Span::styled(
-                                "Type \":help\" for help",
-                                Style::default().fg(Color::Gray).add_modifier(Modifier::DIM),
-                            )
-                            .into_right_aligned_line(),
                         ),
-                );
+                    ));
 
             f.render_widget(msgeez, messages_area);
 
@@ -142,7 +132,20 @@ fn text_area_refresh() -> TextArea<'static> {
     let mut text_area = TextArea::default();
     text_area.set_cursor_line_style(Style::default().add_modifier(Modifier::SLOW_BLINK));
     text_area.set_placeholder_text("Message...");
-    text_area.set_block(Block::default().borders(Borders::ALL).title("Send"));
+    text_area.set_block(
+        Block::default()
+            .borders(Borders::ALL)
+            .title(Span::styled("Send", Style::default().fg(Color::Blue)))
+            .title_bottom(
+                Span::styled(
+                    ":help",
+                    Style::default()
+                        .fg(Color::LightMagenta)
+                        .add_modifier(Modifier::ITALIC),
+                )
+                .into_right_aligned_line(),
+            ),
+    );
 
     text_area
 }

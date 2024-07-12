@@ -89,7 +89,7 @@ func (s *Server) handleConn(conn net.Conn) {
 					return ps.name == receiver
 				})
 				if idx == -1 {
-					_, err := p.conn.Write([]byte(fmt.Sprintf("\"%s\" is not present in this room. Type \":people\" to list all people in this room\n", receiver)))
+					_, err := p.conn.Write([]byte(fmt.Sprintf("!!! \"%s\" is not present in this room. Type \":people\" to list all people in this room\n", receiver)))
 					slog.Error("Didn't find user", "err", err)
 					return
 				}
@@ -182,7 +182,7 @@ func (p *Person) handleCmd(cmd string) (bool, error) {
 			}
 		}
 	default:
-		_, err := p.conn.Write([]byte(fmt.Sprintf("\"%s\" is not a valid command. Type \":help\" to list all commands\n", strings.TrimPrefix(parts[0], ":"))))
+		_, err := p.conn.Write([]byte(fmt.Sprintf("!!! \"%s\" is not a valid command. Type \":help\" to list all commands\n", strings.TrimPrefix(parts[0], ":"))))
 		if err != nil {
 			return shouldQuit, err
 		}
@@ -200,7 +200,7 @@ func (p *Person) createRoom(roomName string) {
 func (p *Person) joinRoom(roomName string) {
 	room, exists := rooms[roomName]
 	if !exists {
-		_, err := p.conn.Write([]byte(fmt.Sprintf("\"%s\" does not exist. Type \":rooms\" to list all rooms\n", roomName)))
+		_, err := p.conn.Write([]byte(fmt.Sprintf("!!! \"%s\" does not exist. Type \":rooms\" to list all rooms\n", roomName)))
 		if err != nil {
 			slog.Error("Couldn't write message", "err", err)
 		}

@@ -48,6 +48,24 @@ impl App {
                     ),
                     Span::from(parts[1].clone()),
                 ])
+            } else if msg.starts_with("!!! ") {
+                let parts = msg
+                    .splitn(2, '.')
+                    .map(|p| p.to_string())
+                    .collect::<Vec<String>>();
+                Line::from(vec![
+                    Span::styled(
+                        format!("{}.", parts[0]),
+                        Style::default().fg(Color::Red).add_modifier(Modifier::BOLD),
+                    ),
+                    Span::styled(
+                        parts[1].clone(),
+                        Style::default()
+                            .fg(Color::LightGreen)
+                            .add_modifier(Modifier::ITALIC),
+                    ),
+                ])
+                .centered()
             } else {
                 Line::styled(
                     msg,
