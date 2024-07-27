@@ -1,7 +1,7 @@
 package server
 
 import (
-	"fmt"
+	// "fmt"
 	"log/slog"
 	"net"
 )
@@ -13,9 +13,19 @@ type Person struct {
 	room  string
 }
 
-func makePerson(conn net.Conn, currCount *int) *Person {
+type Room struct {
+	name   string
+	chatCh chan string
+	people []*Person
+}
+
+func (s *Server) makePerson(conn net.Conn, currCount *int) *Person {
 	*currCount++
-	name := fmt.Sprintf("Person%d", *currCount)
+	name := s.nameGen.newName()
+	for !s.nameGen.insert(name) {
+		name = s.nameGen.newName()
+	}
+
 	person := &Person{
 		conn:  conn,
 		name:  name,
@@ -27,12 +37,6 @@ func makePerson(conn net.Conn, currCount *int) *Person {
 		slog.Error("Couldn't write greeting", "err", err)
 	}
 	return person
-}
-
-type Room struct {
-	name   string
-	chatCh chan string
-	people []*Person
 }
 
 func makeRoom(name string) *Room {

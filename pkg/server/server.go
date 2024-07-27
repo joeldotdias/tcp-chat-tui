@@ -31,12 +31,14 @@ var rooms = make(map[string]*Room)
 type Server struct {
 	listener net.Listener
 	count    int
+	nameGen  *NameGen
 }
 
-func NewServer() *Server {
+func InitServer() *Server {
 	rooms[defaultRoom] = makeRoom(defaultRoom)
 	return &Server{
-		count: 0,
+		count:   0,
+		nameGen: InitNameGen(),
 	}
 }
 
@@ -61,7 +63,7 @@ func (s *Server) Run() error {
 
 func (s *Server) handleConn(conn net.Conn) {
 	slog.Info("Incoming connection", "addr", conn.RemoteAddr())
-	person := makePerson(conn, &s.count)
+	person := s.makePerson(conn, &s.count)
 
 	// send messages
 	go func(p *Person) {

@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	server := server.NewServer()
+	server := server.InitServer()
 	if err := server.Run(); err != nil {
 		log.Fatal(err)
 	}
