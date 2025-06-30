@@ -56,7 +56,7 @@ func (ng *NameGen) newName() string {
 		ng.noun_offset_idx %= len(ng.noun_offsets)
 	}
 
-	return adj + " " + noun
+	return adj + noun
 }
 
 func (ng *NameGen) insert(name string) bool {
